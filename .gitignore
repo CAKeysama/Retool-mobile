@@ -1,0 +1,6 @@
+# IntelliJ/Android Studio files at root
+.idea/
+*.iml
+
+# OS files
+.DS_Store
