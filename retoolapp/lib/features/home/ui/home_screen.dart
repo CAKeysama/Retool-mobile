@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
+import '../../../core/services/firestore_service.dart';
 import '../widgets/dashboard_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
+  static final FirestoreService _firestoreService = FirestoreService();
 
   @override
   Widget build(BuildContext context) {
@@ -169,27 +172,42 @@ class HomeScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
 
-                    // High-quality Dashboard Cards
-                    const ModernDashboardCard(
-                      icon: Icons.inventory_2_outlined,
-                      value: '21',
-                      label: 'Dispositivos Registrados',
-                      tag: 'D',
-                      delay: 200,
+                    // High-quality Dashboard Cards with Real-time data
+                    StreamBuilder<int>(
+                      stream: _firestoreService.getDispositivosCount(),
+                      builder: (context, snapshot) {
+                        return ModernDashboardCard(
+                          icon: Icons.inventory_2_outlined,
+                          value: snapshot.hasData ? snapshot.data.toString() : '...',
+                          label: 'Dispositivos Registrados',
+                          tag: 'D',
+                          delay: 200,
+                        );
+                      }
                     ),
-                    const ModernDashboardCard(
-                      icon: Icons.build_outlined,
-                      value: '6',
-                      label: 'Utilizações Ativas',
-                      tag: 'U',
-                      delay: 400,
+                    StreamBuilder<int>(
+                      stream: _firestoreService.getUtilizacoesCount(),
+                      builder: (context, snapshot) {
+                        return ModernDashboardCard(
+                          icon: Icons.build_outlined,
+                          value: snapshot.hasData ? snapshot.data.toString() : '...',
+                          label: 'Utilizações Ativas',
+                          tag: 'U',
+                          delay: 400,
+                        );
+                      }
                     ),
-                    const ModernDashboardCard(
-                      icon: Icons.sell_outlined,
-                      value: '3',
-                      label: 'Categorias de Ferramentas',
-                      tag: 'C',
-                      delay: 600,
+                    StreamBuilder<int>(
+                      stream: _firestoreService.getCategoriasCount(),
+                      builder: (context, snapshot) {
+                        return ModernDashboardCard(
+                          icon: Icons.sell_outlined,
+                          value: snapshot.hasData ? snapshot.data.toString() : '...',
+                          label: 'Categorias de Ferramentas',
+                          tag: 'C',
+                          delay: 600,
+                        );
+                      }
                     ),
 
                     const SizedBox(height: 100), // Space for floating nav
